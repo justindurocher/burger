@@ -1,16 +1,5 @@
 var connection = require('./connection.js');
 
-function printQuestionMarks(num) {
-    var arr = [];
-  
-    for (var i = 0; i < num; i++) {
-      arr.push("?");
-    }
-  
-    return arr.toString();
-  }
-  
-
 var orm = {
 
     selectAll : function(tableInput, colToSearch, valOfCol){
@@ -29,16 +18,18 @@ var orm = {
 
     insertOne : function(table, cols, vals, cd) {
 
-        var query = "INSERT INTO " + table;
+        let query = "INSERT INTO ?? (??) = (?)";
 
-        query += " (";
-        query += cols.toString();
-        query += ") ";
-        query += "VALUES (";
-        query += printQuestionMarks(vals.length);
-        query += ") ";
+        connection.query(query, [table, cols, vals], function(err ,res){
 
-        console.log(query);
+            if (err) throw err;
+
+            
+            cd(res);
+
+        });
+
+
 
         connection.query(query, vals, function(err,res){
 
@@ -51,7 +42,24 @@ var orm = {
 
         )
 
-    }
+    },
 
-}
+    updateOne : function(table, newC, condition, old, cb){
+
+        let query = "UPDATE ?? SET ?? = ? WHERE ?? = ?";
+
+        connection.query(query, [table, newC, newV, condition, old], function(err, res){
+
+            if (err) throw err;
+
+            cd(res);
+
+        });
+
+    }
+        }
+
+
+insertOne();
+
 module.exports = orm;
