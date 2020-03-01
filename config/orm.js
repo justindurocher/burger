@@ -59,7 +59,4 @@ var orm = {
     }
         }
 
-
-insertOne();
-
 module.exports = orm;
